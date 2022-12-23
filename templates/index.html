@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Flight Radar
+{% endblock %}
+
+{% block main %}
+
+<div class="box">
+    <div class="flight-container">
+        <div class="text">
+            Search, Compare Flights & Save
+        </div>
+        <div class="subtext">
+            Discover your next dream destination
+        </div>
+        <form action="/flights" method="post">
+            <div class="searchbox">
+                <div class="source-box">
+                    <input class="source-city" type="text" autocomplete="off" placeholder="Source" name="source">
+                    <!-- <ul class="options-list">
+                        <li class="source-option">
+                            <div class="airport-name"> <span>BOM</span> Chhatrapati Shivaji International Airport</div>
+                            <div class="airport-location">Mumbai, Maharashtra, IN</div>
+                        </li>
+                        <li class="source-option">
+                            <div class="airport-name"> <span>DXB</span> Dubai International Airport </div>
+                            <div class="airport-location">Dubai, Dubai, AE</div>
+                        </li>
+                        <li class="source-option">
+                            <div class="airport-name"> <span>SHJ</span> Sharjah International Airport</div>
+                            <div class="airport-location">Sharjah, Ash-Shariqah, AE</div>
+                        </li>
+                    </ul> -->
+                </div> 
+                <div class="destination-box">
+                    <input class="destination-city" type="text" autocomplete="off" placeholder="Destination" name="destination">
+                    <!-- <ul class="options-list">
+                        <li class="destination-option">
+                            <div class="airport-name"> <span>BOM</span> Chhatrapati Shivaji International Airport</div>
+                            <div class="airport-location">Mumbai, Maharashtra, IN</div>
+                        </li>
+                        <li class="destination-option">
+                            <div class="airport-name"> <span>DXB</span> Dubai International Airport </div>
+                            <div class="airport-location">Dubai, Dubai, AE</div>
+                        </li>
+                        <li class="destination-option">
+                            <div class="airport-name"> <span>SHJ</span> Sharjah International Airport</div>
+                            <div class="airport-location">Sharjah, Ash-Shariqah, AE</div>
+                        </li>
+                    </ul> -->
+                </div> 
+                <input type="text" placeholder="Departure" onfocus="(this.type='date')" name="departure">
+                <button type="submit" action="#">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="bg-light">
+    <div class="offers-container">
+        <div class="text">
+            Trending Cities
+        </div>
+        <div class="subtext">
+            Book flights to a destination popular with travelers around the globe.
+        </div>
+        <div class="cards-container">
+            <div class="card">
+                <img src="https://q-xx.bstatic.com/xdata/images/city/square210/619923.jpg?k=4fb13225390240a51ee5aa1d76318d03dc0de8a046ddc06e4598f17b287bdcc9&o=" >
+                <div class="caption">
+                    <p>
+                        Dubai, United Arab Emirates
+                    </p>
+                </div>
+                <button id="dubai" class="card-btn" type="button" action="/flights">
+                    Check Flights
+                </button>
+            </div>
+            <div class="card">
+                <img src="https://q-xx.bstatic.com/xdata/images/city/square210/856674.jpg?k=70a9589c2f7d2fc175c3ac02c55702c2e433f588866756a394cddfe215170f38&o=" >
+                <div class="caption">
+                    <p>
+                        New York, United States of America
+                    </p>
+                </div>
+                <button id="nyc" class="card-btn" type="button" action="/flights">
+                        Check Flights
+                </button>
+            </div>
+            <div class="card">
+                <img src="https://q-xx.bstatic.com/xdata/images/city/square210/613094.jpg?k=f751e035ae2c0ac97263ed7d150bae607ffa17a88c55e81cec907941d6bb078b&o=" >
+                <div class="caption">
+                    <p>
+                        London, United Kingdom
+                    </p>
+                </div>
+                <button id="uk" class="card-btn" type="button" action="/flights">
+                    Check Flights
+                </button>
+            </div>
+            <div class="card">
+                <img src="https://q-xx.bstatic.com/xdata/images/city/square210/674773.jpg?k=f65fb36a6b12a3f09a07232ef7946deb46871c0d5a308d3e16ff127d61233f41&o=" >
+                <div class="caption">
+                    <p>
+                        Male City, Maldives
+                    </p>
+                </div>
+                <button id="maldives" class="card-btn" type="button" action="/flights">
+                    Check Flights
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

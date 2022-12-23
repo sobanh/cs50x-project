@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> {% block title %}{% endblock %} </title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="static/script.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                    <a class=navbar-brand href="/"> 
+                        <span id="navbrand_text">Flight</span><span id="navbrand_text2">Radar</span>
+                    </a>
+                    <ul class="login-buttons">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">Log In</a>
+                        </li>
+                    </ul>
+            </div>
+            <!-- <button class="navbar-toggler">
+                <span class="navbar-toggler-icon"></span>
+            </button> -->
+            <div class="navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/flights">Flights</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/hotels">Hotels</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/news">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/bookings">Bookmarks</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    </header>
+    <main>
+        {% block main %}
+        {% endblock %}
+    </main>
+    <footer>
+        Data provided by<a href="#">Amadeus</a>    
+    </footer>
+</body>
+</html>

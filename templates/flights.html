@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Flights
+{% endblock %} 
+
+{% block main %}
+<div class="box">
+    <div class="flight-container">
+        <div class="text">
+            Search for Flights
+        </div>
+        <div class="subtext">
+            Discover your next dream destination
+        </div>
+        <form action="/flights" method="post">
+            <div class="searchbox">
+                <input type="text" autocomplete="off" placeholder="Source" name="source">
+                <input type="text" autocomplete="off" placeholder="Destination" name="destination">
+                <input type="text" placeholder="Departure" onfocus="(this.type='date')" name="departure">
+                <button type="submit" action="#">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="bg-light">
+    <div class="flight-container">
+        <div class="results-container">
+            <div class="filters">
+                Showing {{results}} results
+            </div>
+            <div class="results">
+                {% for data in dataset %}
+                <div class="flight-card">
+                    <div class="flight-info">
+                        <div class="airline-info">
+                            <!-- <div class="airline-logo">
+                                <img src={{data.logo}}>
+                            </div> -->
+                            <div class="flight-route">
+                                <div class="source">
+                                    <div class="time"> {{data['departureTime']}} </div>
+                                    <div class="iata-code">BOM</div>
+                                    <div class="date">{{data['departureDate']}}</div>
+                                </div>
+                                <div class="duration">
+                                    <div class="hours"> {{data['duration']}} </div>
+                                    <div><hr></div>
+                                    <!-- <div class="mode">
+                                        Direct
+                                    </div> -->
+                                </div>
+                                <div class="destination">
+                                    <div class="time"> {{data['arrivalTime']}} </div>
+                                    <div class="iata-code">DXB</div>
+                                    <div class="date"> {{data['arrivalDate']}} </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="airline-name">{{data['name']}}</div>
+                    </div>
+                    <div class="flight-price">
+                        <p class="price"> {{data['price']}} </p>
+                        <p class="price-text">Total price for one traveler.</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
