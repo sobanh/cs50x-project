@@ -1,0 +1,7 @@
+Flask
+Flask-session
+requests
+cs50
+amadeus
+urllib.request 
+ssl

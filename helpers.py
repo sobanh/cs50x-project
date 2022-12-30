@@ -1,77 +1,79 @@
 from datetime import datetime
 from cs50 import SQL
+from flask import redirect, render_template, request, session
+from functools import wraps
+from amadeus import Client, ResponseError
+import ssl
+from urllib.request import urlopen
+import requests
 
 db = SQL("sqlite:///airlines.db")
 
-dataset= [
-    
-{'type': 'flight-offer', 'id': '1', 'source': 'GDS', 'instantTicketingRequired': False, 'nonHomogeneous': False, 'oneWay': False, 'lastTicketingDate': '2022-12-23', 'numberOfBookableSeats': 9, 'itineraries': [{'duration': 'PT3H20M', 'segments': [{'departure': {'iataCode': 'BOM', 'terminal': '2', 'at': '2022-12-23T23:05:00'}, 'arrival': {'iataCode': 'DXB', 'terminal': '1', 'at': '2022-12-24T00:55:00'}, 'carrierCode': 'SG', 'number': '13', 'aircraft': {'code': '7M8'}, 
-                                         'operating': {'carrierCode': 'SG'}, 
-                                         'duration': 'PT3H20M', 
-                                         'id': '3', 
-                                         'numberOfStops': 0, 
-                                         'blacklistedInEU': False}]}], 
-          'price': {'currency': 'EUR', 
-                    'total': '170.43', 
-                    'base': '125.00', 
-                    'fees': [{'amount': '0.00', 'type': 'SUPPLIER'}, 
-                             {'amount': '0.00', 'type': 'TICKETING'}], 
-                    'grandTotal': '170.43'}, 
-         'pricingOptions': {'fareType': ['PUBLISHED'], 'includedCheckedBagsOnly': True}, 
-         'validatingAirlineCodes': ['GP'], 
-         'travelerPricings': [{'travelerId': '1', 
-                               'fareOption': 'STANDARD', 
-                               'travelerType': 'ADULT', 
-                               'price': {'currency': 'EUR', 'total': '170.43', 'base': '125.00'}, 
-                               'fareDetailsBySegment': [{'segmentId': '3', 
-                                                        'cabin': 'ECONOMY', 
-                                                        'fareBasis': 'UOWSVRIN', 
-                                                        'class': 'U', 
-                                                        'includedCheckedBags': {'weight': 30, 'weightUnit': 'KG'}}]}]}, 
 
-    {'type': 'flight-offer', 'id': '2', 'source': 'GDS', 
-         'instantTicketingRequired': False, 
-         'nonHomogeneous': False, 
-         'oneWay': False, 
-         'lastTicketingDate': '2022-12-22', 
-         'numberOfBookableSeats': 9, 
-         'itineraries': [{'duration': 'PT3H30M', 
-                            'segments': [{'departure': {'iataCode': 'BOM', 'terminal': '2', 'at': '2022-12-23T05:15:00'}, 
-                                            'arrival': {'iataCode': 'DXB', 'terminal': '2', 'at': '2022-12-23T07:15:00'}, 
-                                            'carrierCode': 'FZ', 
-                                            'number': '446', 
-                                            'aircraft': {'code': '73H'}, 
-                                            'operating': {'carrierCode': 'FZ'}, 
-                                            'duration': 'PT3H30M', 
-                                            'id': '4', 
-                                            'numberOfStops': 0, 
-                                            'blacklistedInEU': False}]}], 
-         'price': {'currency': 'EUR', 
-                    'total': '171.51', 
-                    'base': '97.00', 
-                    'fees': [{'amount': '0.00', 'type': 'SUPPLIER'}, 
-                             {'amount': '0.00', 'type': 'TICKETING'}], 
-                    'grandTotal': '171.51'}, 
-         'pricingOptions': {'fareType': ['PUBLISHED'], 'includedCheckedBagsOnly': True}, 
-         'validatingAirlineCodes': ['FZ'], 
-         'travelerPricings': [{'travelerId': '1', 'fareOption': 'STANDARD', 'travelerType': 'ADULT', 'price': {'currency': 'EUR', 'total': '171.51', 'base': '97.00'}, 'fareDetailsBySegment': [{'segmentId': '4', 'cabin': 'ECONOMY', 'fareBasis': 'UOLP7IN1', 'class': 'U', 'includedCheckedBags': {'weight': 30, 'weightUnit': 'KG'}}]}]}, 
-    
-    {'type': 'flight-offer', 'id': '3', 'source': 'GDS', 'instantTicketingRequired': False, 'nonHomogeneous': False, 'oneWay': False, 'lastTicketingDate': '2022-12-23', 'numberOfBookableSeats': 1, 'itineraries': [{'duration': 'PT27H45M', 'segments': [{'departure': {'iataCode': 'BOM', 'terminal': '2', 'at': '2022-12-23T20:10:00'}, 'arrival': {'iataCode': 'HYD', 'at': '2022-12-23T21:40:00'}, 'carrierCode': 'AI', 'number': '619', 'aircraft': {'code': '319'}, 'operating': {'carrierCode': 'AI'}, 'duration': 'PT1H30M', 'id': '5', 'numberOfStops': 0, 'blacklistedInEU': False}, {'departure': {'iataCode': 'HYD', 'at': '2022-12-24T19:40:00'}, 'arrival': {'iataCode': 'DXB', 'terminal': '1', 'at': '2022-12-24T22:25:00'}, 'carrierCode': 'AI', 'number': '951', 'aircraft': {'code': '32N'}, 'operating': {'carrierCode': 'AI'}, 'duration': 'PT4H15M', 'id': '6', 'numberOfStops': 0, 'blacklistedInEU': False}]}], 'price': {'currency': 'EUR', 'total': '189.27', 'base': '159.00', 'fees': [{'amount': '0.00', 'type': 'SUPPLIER'}, {'amount': '0.00', 'type': 'TICKETING'}], 'grandTotal': '189.27'}, 'pricingOptions': {'fareType': ['PUBLISHED'], 'includedCheckedBagsOnly': True}, 'validatingAirlineCodes': ['AI'], 'travelerPricings': [{'travelerId': '1', 'fareOption': 'STANDARD', 'travelerType': 'ADULT', 'price': {'currency': 'EUR', 'total': '189.27', 'base': '159.00'}, 'fareDetailsBySegment': [{'segmentId': '5', 'cabin': 'ECONOMY', 'fareBasis': 'ULOWHYAE', 'class': 'Q', 'includedCheckedBags': {'weight': 30, 'weightUnit': 'KG'}}, {'segmentId': '6', 'cabin': 'ECONOMY', 'fareBasis': 'ULOWHYAE', 'class': 'U', 'includedCheckedBags': {'weight': 30, 'weightUnit': 'KG'}}]}]}, 
-    
-    {'type': 'flight-offer', 'id': '4', 'source': 'GDS', 'instantTicketingRequired': False, 'nonHomogeneous': False, 'oneWay': False, 'lastTicketingDate': '2022-12-23', 'numberOfBookableSeats': 1, 'itineraries': [{'duration': 'PT3H15M', 'segments': [{'departure': {'iataCode': 'BOM', 'terminal': '2', 'at': '2022-12-23T20:10:00'}, 'arrival': {'iataCode': 'DXB', 'terminal': '1', 'at': '2022-12-23T21:55:00'}, 'carrierCode': 'AI', 'number': '983', 'aircraft': {'code': '788'}, 'operating': {'carrierCode': 'AI'}, 'duration': 'PT3H15M', 'id': '1', 'numberOfStops': 0, 'blacklistedInEU': False}]}], 'price': {'currency': 'EUR', 'total': '195.27', 'base': '159.00', 'fees': [{'amount': '0.00', 'type': 'SUPPLIER'}, {'amount': '0.00', 'type': 'TICKETING'}], 'grandTotal': '195.27'}, 'pricingOptions': {'fareType': ['PUBLISHED'], 'includedCheckedBagsOnly': True}, 'validatingAirlineCodes': ['AI'], 'travelerPricings': [{'travelerId': '1', 'fareOption': 'STANDARD', 'travelerType': 'ADULT', 'price': {'currency': 'EUR', 'total': '195.27', 'base': '159.00'}, 'fareDetailsBySegment': [{'segmentId': '1', 'cabin': 'ECONOMY', 'fareBasis': 'ULOWBMAE', 'class': 'U', 'includedCheckedBags': {'weight': 30, 'weightUnit': 'KG'}}]}]}, 
-    
-    {'type': 'flight-offer', 'id': '5', 'source': 'GDS', 'instantTicketingRequired': False, 'nonHomogeneous': False, 'oneWay': False, 'lastTicketingDate': '2022-12-23', 'numberOfBookableSeats': 9, 'itineraries': [{'duration': 'PT3H20M', 'segments': [{'departure': {'iataCode': 'BOM', 'terminal': '2', 'at': '2022-12-23T16:25:00'}, 'arrival': {'iataCode': 'DXB', 'terminal': '1', 'at': '2022-12-23T18:15:00'}, 'carrierCode': 'UK', 'number': '201', 'aircraft': {'code': '321'}, 'operating': {'carrierCode': 'UK'}, 'duration': 'PT3H20M', 'id': '2', 'numberOfStops': 0, 'blacklistedInEU': False}]}], 'price': {'currency': 'EUR', 'total': '196.08', 'base': '160.00', 'fees': [{'amount': '0.00', 'type': 'SUPPLIER'}, {'amount': '0.00', 'type': 'TICKETING'}], 'grandTotal': '196.08'}, 'pricingOptions': {'fareType': ['PUBLISHED'], 'includedCheckedBagsOnly': True}, 'validatingAirlineCodes': ['UK'], 'travelerPricings': [{'travelerId': '1', 'fareOption': 'STANDARD', 'travelerType': 'ADULT', 'price': {'currency': 'EUR', 'total': '196.08', 'base': '160.00'}, 'fareDetailsBySegment': [{'segmentId': '2', 'cabin': 'ECONOMY', 'fareBasis': 'VOINYV', 'brandedFare': 'ECOYV', 'class': 'V', 'includedCheckedBags': {'weight': 30, 'weightUnit': 'KG'}}]}]}]
+def apology(message, code=400):
+    """Render message as an apology to user."""
+    def escape(s):
+        """
+        Escape special characters.
+
+        https://github.com/jacebrowning/memegen#special-characters
+        """
+        for old, new in [("-", "--"), (" ", "-"), ("_", "__"), ("?", "~q"),
+                         ("%", "~p"), ("#", "~h"), ("/", "~s"), ("\"", "''")]:
+            s = s.replace(old, new)
+        return s
+    return render_template("apology.html", top=code, bottom=escape(message)), code
 
 
-def lookup():
+def login_required(f):
+    """
+    Decorate routes to require login.
+
+    https://flask.palletsprojects.com/en/1.1.x/patterns/viewdecorators/
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect("/login")
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def ssl_disabled_urlopen(endpoint):
+    context = ssl._create_unverified_context()
+    return urlopen(endpoint, context=context)
+
+
+def lookup(source, destination, date):
+
+    # Query Amadeus API for flight tickets
+    amadeus = Client(
+        client_id='rQeI8D9rCyDTuPVIWwrTG7L8ulryLARI',
+        client_secret='iZGfXyLnZYnSBm6Y',
+        http=ssl_disabled_urlopen
+    )
+
+    try:
+        response = amadeus.shopping.flight_offers_search.get(
+            originLocationCode=source,
+            destinationLocationCode=destination,
+            departureDate=date,
+            adults=1, 
+            max=10,
+            nonStop='true',
+            currencyCode='INR') 
+        return response.data
+    except ResponseError:
+        return None
+
+
+def extract_data(dataset):
+
+    # Extracting data from the Amadeus API response
     info = list()
+    for data in dataset:    
 
-    for data in dataset:
-        #source
-        #destintaion
-        #price
-        
-        #departure time
+        # Departure date and time
         text = data['itineraries'][0]['segments'][0]['departure']['at']
         x = text.split("T")
 
@@ -81,42 +83,92 @@ def lookup():
         departureDate = dateobj.strftime('%B %d')
         departureTime = timeobj.strftime('%I:%M %p')
 
-        #arrival time
-        text2 = data['itineraries'][0]['segments'][0]['arrival']['at']
-        x2 = text2.split("T")
+        # Arrival date and time
+        text = data['itineraries'][0]['segments'][0]['arrival']['at']
+        x = text.split("T")
 
-        dateobj2 = datetime.strptime(x2[0], '%Y-%m-%d').date()
-        timeobj2 = datetime.strptime(x2[1], '%H:%M:%S').time()
+        dateobj = datetime.strptime(x[0], '%Y-%m-%d').date()
+        timeobj = datetime.strptime(x[1], '%H:%M:%S').time()
     
-        arrivalDate = dateobj2.strftime('%B %d')
-        arrivalTime = timeobj2.strftime('%I:%M %p')
-
-        #duration
-        durationformat = (data['itineraries'][0]['duration'][2:].lower())
-        duration = str()
-        for char in durationformat:
-            if char == 'h': 
-                duration += (char + ' ')
-            else:
-                duration += (char)
+        arrivalDate = dateobj.strftime('%B %d')
+        arrivalTime = timeobj.strftime('%I:%M %p')
     
-        #airline name
+        # Airline's name
         code = data['itineraries'][0]['segments'][0]['carrierCode']
         name = db.execute("SELECT name FROM airlines WHERE code = ?", code)
 
-        #logo
-        logo = db.execute("SELECT logo FROM airlines WHERE code + ?", code)
-        abcd = {
-            'source' : data['itineraries'][0]['segments'][0]['departure']['iataCode'],
-            'destination' : data['itineraries'][0]['segments'][0]['arrival']['iataCode'],
-            'price' : data['price']['currency'] + ' ' + data['price']['grandTotal'],
-            'departureDate' : departureDate,
+        price = float(data['price']['grandTotal'])
+
+        extract = {
+            'source': data['itineraries'][0]['segments'][0]['departure']['iataCode'],
+            'destination': data['itineraries'][0]['segments'][0]['arrival']['iataCode'],
+            'price': data['price']['currency'] + ' ' + f"{price:,.2f}",
+            'departureDate': departureDate,
             'departureTime': departureTime,
-            'arrivalTime' : arrivalTime,
-            'arrivalDate' : arrivalDate,
-            'duration' : duration, 
-            'name' : name[0]['name'],
-            'logo' : logo[0]['logo']
+            'arrivalTime': arrivalTime,
+            'arrivalDate': arrivalDate,
+            'name': name[0]['name']
         }
-        info.append(abcd)
+        info.append(extract)
     return info
+
+
+def trackFlight(flightCode):
+
+    # Query AirLabs API for the live status of a flight
+    params = {
+        'api_key': '76458fc9-ee57-49c3-a940-b3f39f9d63db',
+        'flight_iata': flightCode
+    }
+    method = 'flights'
+    api_base = 'https://airlabs.co/api/v9/'
+    api_result = requests.get(api_base+method, params)
+    api_response = api_result.json()
+
+    try:
+        response = api_response['response'][0]
+    except (TypeError, ValueError, IndexError):
+        return None
+    
+    # Airline's Name
+    airline_iata = response['airline_iata']
+    airlines = db.execute("SELECT name from airlines WHERE code = ?", airline_iata)
+
+    # Departure IATA, City and Airport
+    dep_iata = response['dep_iata']
+    depCity = db.execute("SELECT city FROM airports WHERE iata = ?", dep_iata)
+    depAirport = db.execute("SELECT name FROM airports WHERE iata = ?", dep_iata)
+
+    # Arrival IATA, City and Airport
+    arr_iata = response['arr_iata']
+    arrCity = db.execute("SELECT city FROM airports WHERE iata = ?", arr_iata)
+    arrAirport = db.execute("SELECT name FROM airports WHERE iata = ?", arr_iata)
+
+    # Latitude and Longitude
+    lat = response['lat']
+    lng = response['lng']
+
+    # Altitude, Groundspeed and Heading
+    altitude = response['alt']
+    speed = response['speed']
+    heading = response['dir']
+
+    try: 
+        dataset = {
+            'flight_iata': flightCode,
+            'airlines': airlines[0]['name'],
+            'dep_iata': dep_iata,
+            'depCity': depCity[0]['city'],
+            'depAirport': depAirport[0]['name'], 
+            'arr_iata': arr_iata,
+            'arrCity': arrCity[0]['city'],
+            'arrAirport': arrAirport[0]['name'], 
+            'lat': lat,
+            'lng': lng, 
+            'altitude': f"{altitude:,}", 
+            'speed': speed,
+            'heading': heading
+        }
+        return dataset
+    except IndexError:
+        return None

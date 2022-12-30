@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block main %}
+    <div class="login-light"> 
+        <form action="/register" method="post">
+        <div class="login-container">
+                <div>
+                    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
+                </div>
+                <div>
+                    <input class="" name="password" placeholder="Password" type="password">
+                </div>
+                <div>
+                    <input class="" name="confirmation" placeholder="Confirm Password" type="password">
+                </div>
+                <button type="submit">Register Now</button>
+        </div>   
+    </form>  
+    </div>
+{% endblock %}
