@@ -1,9 +1,6 @@
-{% extends "layout.html" %}
-
-{% block title %}
-Search
-{% endblock %}
-
-{% block main %}
-
-{% endblock %}
+{% for data in results %} 
+        <li class="{{path}}-option">
+            <div class="airport-name"> <span> {{data.iata}} </span> {{data.name}}</div>
+            <div class="airport-location"> {{data.city}}, {{data.state}}, {{data.country}} </div>
+        </li>
+{% endfor %}

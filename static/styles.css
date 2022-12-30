@@ -1,20 +1,27 @@
 
-/* div {
-    border: 1px solid black;
-} */
+.flight-container, 
+.offers-container, 
+.flight-card,
+.bookmarks-card,
+.map-container .status-header,
+.map-container .status-body,
+.map-container .map-title,
+.map-container iframe,
+.altitude, .speed, .heading{
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2),
+                0px 3px 10px 0px rgba(0, 0, 0, 0.19);
+}
 
 
 /* Layout */
-
 
 html, body {
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background-image: linear-gradient(to bottom, #051322, #15457c);
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: #f2f2f2;
+    background-color: #051322;
 }
 
 #navbrand_text {
@@ -63,11 +70,6 @@ html, body {
     display: flex;
     justify-content: space-between;
 }
-
-/* 
-.navbar-collapse {
-    display: none;
-} */
 
 .navbar-nav {
     display: flex;
@@ -147,8 +149,31 @@ footer a {
     justify-content: center;
     align-items: center;
     background-color: #f2f2f2;
-
+    min-height: 70vh;
 }
+
+.login-light {
+    background-color: #f2f2f2;
+    padding: 2rem;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    background-color: white;
+    min-width: 200px;
+    display: grid;
+    place-content: center;
+    padding: 2em;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 1rem;
+    border-radius: 10px;
+}
+
 
 .flight-container {
     background-color: white;
@@ -169,7 +194,7 @@ footer a {
     margin-bottom: 10px;
 }
 
-.flight-container .searchbox {
+.searchbox {
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -181,19 +206,18 @@ footer a {
     position: relative;
 }
 
-.searchbox input {
+.searchbox input, .login-container input {
     height: 40px;
     padding: 0 10px;
     border: 1px solid #f2f2f2;
     border-radius: 5px;
-    font-weight: bold;
 }
 
-.searchbox input:focus {
+.searchbox input:focus, .login-container input:focus {
     border-color: #051322;
 }
 
-.searchbox button {
+.searchbox button, .login-container button {
     color: white;
     background-color: #15457c;
     border-radius: 5px;
@@ -221,7 +245,14 @@ footer a {
     width: 95%;
     gap: 0.8rem;
     margin: unset;
-    z-index: 99;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.options-list.active {
+    opacity: 1;
+    pointer-events: all;
 }
 
 .options-list li {
@@ -304,6 +335,8 @@ footer a {
     cursor: pointer;
 }
 
+/* FLIGHTS */
+
 .results-container {
     display: grid;
     gap: 1rem;
@@ -330,7 +363,7 @@ footer a {
 }
 
 .results-container .flight-card {
-    padding: 15px 0;
+    padding: 1em 0.25em;
     background-color: white;
     border-radius: 10px;
     display: grid;
@@ -345,29 +378,14 @@ footer a {
 }
 
 .airline-info {
-    /* border: 1px solid black; */
     display: grid;
-    /* grid-template-columns: 1fr 3fr; */
 }
 
-.flight-route {
-    /* border: 1px solid black; */
-    display: grid;
-    grid-template-columns: 2fr 1fr 2fr;
-}
-
-/* .source, .iata-code, .date, .destination {
-    /* border: 1px solid black; */
-
-.flight-route {
-    text-align: center;
-}
-
-.flight-route .time {
+ .time {
     font-size: 1.2rem;
 }
 
-.flight-route .iata-code, .date {
+.iata-code, .date, .city-name {
     font-size: 1rem;
 }
 
@@ -384,20 +402,9 @@ footer a {
     justify-content: flex-end;
     align-items: center;
 } 
-/* .duration .mode {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-}  */
 
-/* .breakline {
-    margin: 0;
-    padding: 0;
-} */
 
 .airline-name {
-    /* border: 1px solid black; */
     margin: 10px;
     display: flex;
     justify-content: center;
@@ -417,6 +424,10 @@ footer a {
     text-align: center;
 }
 
+.flight-card .svg-image {
+    flex-shrink: 2;
+}
+
 .flight-price .price {
     font-size: 1.5rem;
 }
@@ -425,6 +436,223 @@ footer a {
     font-size: 1rem;
 }
 
+/* TRACKER */
+
+.map-container {
+    background-color: #f2f2f2;
+    width: 80%;
+    max-width: 1036px;
+    padding: 30px;
+    border-radius: 15px;
+}
+
+
+.flight-status {
+    display: grid;
+    gap: 1rem;
+    grid-template-rows: 1fr auto;
+}
+
+.status-header {
+    background-color: white;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-radius: 10px;
+}
+
+.status-header .flight-number,  .status-header .flight-route {
+    padding: 1em;
+}
+
+.flight-number {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.flight-route {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+}
+
+.status-body {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+    border-radius: 10px;
+    background-color: white;
+    padding: 1em;
+}
+
+.airport-details {
+    display: grid;
+    grid-template-rows: 2fr 1fr auto;
+    text-align: center;
+}
+
+.details-title {
+    font-size: 1.2rem;
+}
+
+.map-wrapper {
+    padding: 1em 0;
+}
+
+.map-title {
+    padding: 1em;
+    margin-bottom: 0.5em;
+    border-radius: 10px;
+    background-color: white;
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+}
+
+.map-title .title {
+    font-size: 1.3rem;
+}
+.bookmark-btn, .track-btn, .remove-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bookmark-btn button, .track-btn button {
+    border: none;
+    background: #15457c;
+    color: #fff;
+    padding: 0.5em;
+    border-radius: 5px;
+    transition: all 0.3s ease; 
+    cursor: pointer;
+}
+
+button:hover {
+    color: #15457c;
+    border: #15457c solid 1px;
+    background:#fff;
+}
+
+.bookmark-btn button.disabled {
+    color: #15457c;
+    border: #15457c solid 1px;
+    background:#fff;
+}
+
+.mapouter{
+    position:relative;
+    text-align:right;
+    width: 100%;
+}
+
+iframe {
+    border-radius: 5px;
+    width: 100%;
+    height: 600px;
+}
+
+.gmap_canvas {
+    background:none!important;
+}
+.svg-image {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+svg {
+    width: 5em;
+    transform: translate(30%, -25%);
+}
+
+.flight-attitude {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+}
+
+.flight-attitude .altitude, 
+.flight-attitude .speed, 
+.flight-attitude .heading {
+    display: grid;
+    grid-template-rows: 1fr 2fr;
+    border-radius: 10px;
+    background-color: white;
+    text-align: center;
+    padding: 1em;
+    width: 100%;
+}
+
+.flight-attitude .title {
+    font-size: 1.2rem;
+}
+
+.flight-attitude .reading{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* BOOKMARKS */
+
+.bg-light.flex-start {
+    justify-content: flex-start;
+}
+
+.bookmarks-container {
+     width: 80%;
+     max-width: 1036px;
+     padding: 30px;
+     border-radius: 15px;
+     display: grid;
+     gap: 1rem;
+}
+
+.bookmarks-card {
+    padding: 1em;
+    background-color: white;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    border-radius: 10px;
+}
+
+.buttons-bk {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.bookmarks-card .svg-image {
+    flex-shrink: 2;
+}
+
+
+.track-btn button, .remove-btn button {
+    min-width: 60px;
+}
+
+.remove-btn button {
+    border: none;
+    background: #D2001A;
+    color: #fff;
+    padding: 0.5em;
+    border-radius: 5px;
+    transition: all 0.3s ease; 
+    cursor: pointer;
+}
+
+.remove-btn button:hover {
+    color: #D2001A;
+    border: #D2001A solid 1px;
+    background:#fff;
+}
 
 @media only screen and (max-width:700px) {
     .flight-container {
@@ -457,11 +685,11 @@ footer a {
         grid-template-rows: 100px;
     }
 
-    .flight-route .time {
+    .time{
         font-size: 0.6rem;
     }
     
-    .flight-route .iata-code, .date {
+    .iata-code, .date {
         font-size: 0.4rem;
     }
 
@@ -474,11 +702,26 @@ footer a {
         font-size: 0.8rem;
     }
 
-    .flight-price .price-text {
+    .flight-price .price-text, .flight-attitude .reading, .bookmarks-card .flight-number  {
         font-size: 0.6rem;
     }
 
-    .airline-name {
+    .airline-name, .map-container .iata-code, .city-name, 
+    .map-container .flight-number, .status-body, 
+     .flight-attitude .title, .map-title .title{
         font-size: 0.8rem;
+    }
+
+    iframe {
+        height: 300px;
+    }
+
+    .airline-name {
+        transform: translateY(-200%);
+    }
+
+    .bookmark-btn button, .track-btn button, .remove-btn button {
+        font-size: 0.6rem;
+        padding: 0.4em;
     }
 }

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> {% block title %}{% endblock %} </title>
     <link rel="stylesheet" href="/static/styles.css">
-    <script src="static/script.js"></script>
 </head>
 <body>
     <header>
@@ -15,31 +14,33 @@
                         <span id="navbrand_text">Flight</span><span id="navbrand_text2">Radar</span>
                     </a>
                     <ul class="login-buttons">
+                        {%if session["user_id"] %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Log Out</a>
+                        </li>
+                        {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="/register">Register</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/login">Log In</a>
                         </li>
+                        {% endif %}
                     </ul>
             </div>
-            <!-- <button class="navbar-toggler">
-                <span class="navbar-toggler-icon"></span>
-            </button> -->
             <div class="navbar-collapse">
                 <ul class="navbar-nav">
+                    {% if session["user_id"] %}
                     <li class="nav-item">
                         <a class="nav-link" href="/flights">Flights</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/hotels">Hotels</a>
+                        <a class="nav-link" href="/tracker">Tracker</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/news">News</a>
+                        <a class="nav-link" href="/bookmarks">Bookmarks</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/bookings">Bookmarks</a>
-                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>
@@ -50,7 +51,9 @@
         {% endblock %}
     </main>
     <footer>
-        Data provided by<a href="#">Amadeus</a>    
+        {% block footer %} 
+        {% endblock %} 
     </footer>
+    <script src="static/script.js"></script>
 </body>
 </html>
