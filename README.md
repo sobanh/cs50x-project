@@ -14,7 +14,7 @@ The Tracker page in the app includes a Google Map that shows the latest updated 
 - JavaScript
 - Python
 - Flask
-- SQL
+- SQLite
 
 ## Implementation
 
@@ -26,7 +26,7 @@ An autocomplete feature for the search box was implemented with the help of Java
 
 The backend server of this application has been implemented in Python. `app.py` is the main file that communicates with the front end of the application. Some helper functions are included in `helpers.py` to aid the process.
 
-The SQL database consists of four tables namely: airlines, airports, bookmarks and users. As the names suggest the IATA codes, along with other useful information, of various airlines and airports all over the world have been stored in `airlines` and `airports`. \
+The SQLite database consists of four tables namely: airlines, airports, bookmarks and users. As the names suggest the IATA codes, along with other useful information, of various airlines and airports all over the world have been stored in `airlines` and `airports`. \
 `bookmarks` is used to record the details of any flight the user wishes to keep a track of. 
 
 ## Features 

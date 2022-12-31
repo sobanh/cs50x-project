@@ -343,15 +343,48 @@ footer a {
     grid-template-columns: repeat(12, 1fr);;
 }
 
-.results-container .filters {
+.results-container .filters-container {
     padding: 10px;
     background-color: #f2f2f2;
     border-radius: 5px;
     grid-column: span 3/ auto;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.filters-container .title {
+    align-self: center;
+    border-radius: 5px;
+    background-color: white;
+    width: 80%;
+    padding: 0.5em;
+    text-align: center;
+}
+
+.apply {
+    align-self: center;
+    width: 80%;
+    padding: 0.5em;
+    text-align: center;
+}
+
+.apply button {
+    width: 100%;
+}
+
+.filters {
+    border-radius: 5px;
+    background-color: white;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
     align-items: flex-start;
 }
+
 
 .results-container .results {
     border-radius: 5px;
@@ -520,7 +553,7 @@ footer a {
     align-items: center;
 }
 
-.bookmark-btn button, .track-btn button {
+.bookmark-btn button, .track-btn button, .apply button {
     border: none;
     background: #15457c;
     color: #fff;
@@ -605,7 +638,7 @@ svg {
     justify-content: flex-start;
 }
 
-.bookmarks-container {
+.bookmarks-container, .settings-container {
      width: 80%;
      max-width: 1036px;
      padding: 30px;
@@ -634,7 +667,7 @@ svg {
 }
 
 
-.track-btn button, .remove-btn button {
+.track-btn button, .remove-btn button, .apply button {
     min-width: 60px;
 }
 
@@ -653,6 +686,10 @@ svg {
     border: #D2001A solid 1px;
     background:#fff;
 }
+
+/* .settings-container {
+    border: 1px solid black;
+} */
 
 @media only screen and (max-width:700px) {
     .flight-container {
@@ -673,7 +710,7 @@ svg {
         padding: 10px;
     }
 
-    .results-container .filters {
+    .results-container .filters-container {
         grid-column: span 12/ auto;
     }
     

@@ -146,15 +146,26 @@ def flights():
         destination = request.form.get("destination").upper().strip()
         date = request.form.get("departure")
 
+        passengers = request.form.get("passengers")
+        travelClass = request.form.get('class')
+        currency = request.form.get("currency")
+
+        if not passengers:
+            passengers = 1
+        if not travelClass:
+            travelClass = 'ECONOMY'
+        if not currency: 
+            currency = 'INR'
+
         # Validating input
         if not (source and destination and date):
             return apology("Invalid input")
 
         # Lookup data
-        dataset = lookup(source, destination, date)
+        dataset = lookup(source, destination, date, passengers, travelClass, currency)
         if dataset:
             info = extract_data(dataset)
-            return render_template("flights.html", dataset=info, results=len(info))
+            return render_template("flights.html", dataset=info, results=len(info), date=date, passengers=passengers)
         else:
             return apology("No results found")
 
@@ -229,3 +240,11 @@ def remove():
         flightCode = request.form.get("flight-iata")
         db.execute("DELETE FROM bookmarks WHERE flight_iata = ? AND user_id = ?", flightCode, session["user_id"])
     return redirect("/bookmarks")
+
+
+@app.route("/settings")
+def settings():
+    return render_template("settings.html")
+
+
+    

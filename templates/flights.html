@@ -16,7 +16,7 @@
         <form action="/flights" method="post">
           <div class="searchbox">
               <div class="source-box">
-                  <input class="source-city" type="text" autocomplete="off" placeholder="Source" name="source">
+                  <input class="source-city" type="text" autocomplete="off" placeholder="Source" {%if dataset %}value="{{dataset[0]['source']}}"{%endif%} name="source">
                   <ul class="options-list">
                       <!-- <li class="source-option">
                           <div class="airport-name"> <span>BOM</span> Chhatrapati Shivaji International Airport</div>
@@ -25,25 +25,56 @@
                   </ul>
               </div> 
               <div class="destination-box">
-                  <input class="destination-city" type="text" autocomplete="off" placeholder="Destination" name="destination">
+                  <input class="destination-city" type="text" autocomplete="off" placeholder="Destination" v {%if dataset %}value="{{dataset[0]['destination']}}"{%endif%} name="destination">
                   <ul class="options-list">
                       <!-- <li class="destination-option">
                           <div class="airport-name"> <span>BOM</span> Chhatrapati Shivaji International Airport</div>
                           <div class="airport-location">Mumbai, Maharashtra, IN</div> -->
                   </ul>
               </div> 
-              <input type="text" placeholder="Departure" onfocus="(this.type='date')" name="departure">
+              <input type="text" placeholder="Departure" onfocus="(this.type='date')"  {%if dataset %}value="{{date}}"{%endif%} name="departure">
               <button type="submit" action="#">Search</button>
           </div>
-      </form>
     </div>
 </div>
 <div class="bg-light">
     {% if dataset %}
     <div class="flight-container"> 
          <div class="results-container"> 
-             <div class="filters">
+             <div class="filters-container">
+               <div class="title">Filters</div>
+               <div class="filters">
+                 <div class="passengers">
+                  Passengers
+                  <input type="number" name="passengers"  {%if dataset %}value="{{passengers}}"{%endif%} >
+                 </div>
+                 <div class="class">
+                    Class
+                    <select name="class">
+                      <option disabled selected>Choose</option>
+                      <option value="ECONOMY">Economy</option>
+                      <option value="PREMIUM_ECONOMY">Premium Economy</option>
+                      <option value="BUSINESS">Business</option>
+                      <option value="FIRST">First</option>
+                    </select>
+                 </div>
+                 <div class="currency">
+                  Currency
+                  <select name="currency">
+                    <option disabled selected>Choose</option>
+                    <option value="INR">INR</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="AED">AED</option>
+                  </select>
+                </div>
+               </div>
+               <div class="apply">
+                <button type="submit">Apply</button>
+               </div>
+               <div>
                 Showing {{results}} results
+               </div>
             </div>
             <div class="results">
                 {% for data in dataset %}
@@ -214,7 +245,7 @@
                     </div>
                     <div class="flight-price">
                         <p class="price"> {{data['price']}} </p>
-                        <p class="price-text">Total price for one traveler.</p>
+                        <p class="price-text">Total price for {{passengers}} traveler(s).</p>
                     </div>
                 </div>
                 {% endfor %}
@@ -222,6 +253,7 @@
         </div> 
      </div> 
     {% endif %}
+    </form>
 </div>
 {% endblock %}
 

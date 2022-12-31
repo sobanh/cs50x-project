@@ -44,7 +44,7 @@ def ssl_disabled_urlopen(endpoint):
     return urlopen(endpoint, context=context)
 
 
-def lookup(source, destination, date):
+def lookup(source, destination, date, passengers, travelClass, currency):
 
     # Query Amadeus API for flight tickets
     amadeus = Client(
@@ -58,10 +58,11 @@ def lookup(source, destination, date):
             originLocationCode=source,
             destinationLocationCode=destination,
             departureDate=date,
-            adults=1, 
+            adults=passengers,
+            travelClass=travelClass, 
             max=10,
             nonStop='true',
-            currencyCode='INR') 
+            currencyCode=currency) 
         return response.data
     except ResponseError:
         return None
@@ -172,3 +173,8 @@ def trackFlight(flightCode):
         return dataset
     except IndexError:
         return None
+
+
+
+
+        
