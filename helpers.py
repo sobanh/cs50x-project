@@ -44,12 +44,12 @@ def ssl_disabled_urlopen(endpoint):
     return urlopen(endpoint, context=context)
 
 
-def lookup(source, destination, date):
+def lookup(source, destination, date, passengers, travelClass, currency):
 
     # Query Amadeus API for flight tickets
     amadeus = Client(
-        client_id='rQeI8D9rCyDTuPVIWwrTG7L8ulryLARI',
-        client_secret='iZGfXyLnZYnSBm6Y',
+        client_id='AMADEUS_API_KEY',
+        client_secret='AMADEUS_API_SECRET',
         http=ssl_disabled_urlopen
     )
 
@@ -58,10 +58,11 @@ def lookup(source, destination, date):
             originLocationCode=source,
             destinationLocationCode=destination,
             departureDate=date,
-            adults=1, 
+            adults=passengers,
+            travelClass=travelClass, 
             max=10,
             nonStop='true',
-            currencyCode='INR') 
+            currencyCode=currency) 
         return response.data
     except ResponseError:
         return None
@@ -117,7 +118,7 @@ def trackFlight(flightCode):
 
     # Query AirLabs API for the live status of a flight
     params = {
-        'api_key': '76458fc9-ee57-49c3-a940-b3f39f9d63db',
+        'api_key': 'AIRLABS_API_KEY',
         'flight_iata': flightCode
     }
     method = 'flights'
@@ -172,3 +173,8 @@ def trackFlight(flightCode):
         return dataset
     except IndexError:
         return None
+
+
+
+
+        
